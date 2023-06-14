@@ -3,7 +3,7 @@ from typing import Annotated, Literal, Optional, Union
 from pydantic import BaseModel, Field, conint
 
 RenderFormat = Literal["png", "jpg", "pdf"]
-RenderQuality = Annotated[int, conint(ge=0, le=100)]
+RenderQuality = Annotated[int, conint(gt=0, le=100)]
 RenderDensity = int
 
 

@@ -144,12 +144,18 @@ class AsyncRtexClient:
         self,
         code: str,
         format: RenderFormat = "png",
+        documentclass: str = "minimal",
+        quality: Optional[RenderQuality] = None,
+        density: Optional[RenderDensity] = None,
     ):
         final_doc = rf"\({code}\)"
 
         res = await self.create_render(
             code=final_doc,
             format=format,
+            documentclass=documentclass,
+            quality=quality,
+            density=density,
         )
 
         if res.status == "error":
