@@ -8,7 +8,7 @@ import aiohttp
 from pydantic import validate_arguments
 
 from rtex.constants import DEFAULT_API_HOST, FORMAT_MIME
-from rtex.exceptions import YouNeedToUseAContextManager
+from rtex.exceptions import RtexError, YouNeedToUseAContextManager
 from rtex.models import (
     CreateLaTeXDocumentRequest,
     CreateLaTeXDocumentResponse,
@@ -159,7 +159,7 @@ class AsyncRtexClient:
         )
 
         if res.status == "error":
-            raise RuntimeError("Failed to render code")
+            raise RtexError("Unknown error rendering code.")
 
         return await self.get_render(
             filename=res.filename,
