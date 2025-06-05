@@ -5,7 +5,7 @@ import textwrap
 from typing import Optional
 
 import aiohttp
-from pydantic import validate_arguments
+from pydantic import validate_call
 
 from rtex.constants import DEFAULT_API_HOST, FORMAT_MIME
 from rtex.exceptions import RtexError, YouNeedToUseAContextManager
@@ -73,7 +73,7 @@ class AsyncRtexClient:
                 )
             )
 
-    @validate_arguments
+    @validate_call
     async def create_render(
         self,
         code: str,
@@ -99,16 +99,16 @@ class AsyncRtexClient:
         res = await self.session.post(
             "/api/v2",
             headers={"Accept": "application/json"},
-            data=request_body.json(
+            data=request_body.model_dump_json(
                 exclude_defaults=True,
                 exclude_none=True,
                 exclude_unset=True,
             ),
         )
 
-        return CreateLaTeXDocumentResponse.parse_obj(await res.json()).__root__
+        return CreateLaTeXDocumentResponse.model_validate(await res.json()).root
 
-    @validate_arguments(config={"arbitrary_types_allowed": True})
+    @validate_call(config={"arbitrary_types_allowed": True})
     async def save_render(
         self,
         filename: str,
@@ -127,7 +127,7 @@ class AsyncRtexClient:
         async for chunk, _ in res.content.iter_chunks():
             output_fd.write(chunk)
 
-    @validate_arguments
+    @validate_call
     async def get_render(
         self,
         filename: str,
@@ -139,7 +139,7 @@ class AsyncRtexClient:
 
         return buf
 
-    @validate_arguments
+    @validate_call
     async def render_math(
         self,
         code: str,

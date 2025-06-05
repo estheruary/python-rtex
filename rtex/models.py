@@ -1,6 +1,6 @@
 from typing import Annotated, Literal, Optional, Union
 
-from pydantic import BaseModel, Field, conint
+from pydantic import BaseModel, Field, RootModel, conint
 
 RenderFormat = Literal["png", "jpg", "pdf"]
 RenderQuality = Annotated[int, conint(gt=0, le=100)]
@@ -26,8 +26,8 @@ class CreateLaTeXDocumentErrorResponse(BaseModel):
     description: str
 
 
-class CreateLaTeXDocumentResponse(BaseModel):
-    __root__: Union[
+class CreateLaTeXDocumentResponse(RootModel):
+    root: Union[
         CreateLaTeXDocumentSuccessResponse,
         CreateLaTeXDocumentErrorResponse,
     ] = Field(discriminator="status")
